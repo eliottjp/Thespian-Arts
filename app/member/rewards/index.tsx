@@ -161,7 +161,7 @@ export default function RewardsPage() {
                 disabled={entry.collected}
                 onPress={() =>
                   router.push({
-                    pathname: "member/rewards/detail",
+                    pathname: "member/rewards/redeem",
                     params: {
                       rewardId: entry.id,
                       rewardData: JSON.stringify({

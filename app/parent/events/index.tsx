@@ -8,11 +8,11 @@ import {
   Pressable,
 } from "react-native";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../lib/firebase";
-import Screen from "../../components/Screen";
-import Title from "../../components/Title";
-import MyButton from "../../components/Button";
-import SlideUpModal from "../../components/SlideUpModal";
+import { db } from "../../../lib/firebase";
+import Screen from "../../../components/Screen";
+import Title from "../../../components/Title";
+import MyButton from "../../../components/Button";
+import SlideUpModal from "../../../components/SlideUpModal";
 
 type EventItem = {
   id: string;
