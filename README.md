@@ -57,7 +57,7 @@ Below is the current app structure and progress across all roles.
 |---------------------|--------|--------------------------------------------|----------------------------------------------|
 | Dashboard           | ✅     | `parent/`                                  | Profile, updates, payments                   |
 | Events              | ✅     | `parent/events`                            |                                              |
-| Event Details       | ❌     | `parent/events/{event}`                    | RSVP, add to calendar                        |
+| Event Details       | ✅     | `parent/events/{event}`                    | RSVP, add to calendar                        |
 | Groups List         | ✅     | `parent/group?{member}`                    |                                              |
 | Group Details       | ✅     | `parent/group/{group}?{member}`           |                                              |
 | Group Resources     | ✅     | `parent/resources/{member}`               |                                              |
@@ -77,7 +77,7 @@ Below is the current app structure and progress across all roles.
 | Messages List       | ❌     | `parent/messages`                         |                                              |
 | Messages Chat       | ❌     | `parent/messages/{chat}`                 |                                              |
 | Notifications       | ❌     | `parent/notifications`                   |                                              |
-| Shop                | ❌     | `parent/store`                           | Buy merch, DVDs, etc.                         |
+| Shop                | ✅     | `parent/store`                           | Buy merch, DVDs, etc.                         |
 | Review Shop Items   | ❌     | `parent/store/review`                    | Review child’s requested items               |
 
 ---
