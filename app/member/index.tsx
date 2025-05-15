@@ -14,6 +14,7 @@ import Card from "../../components/Card";
 import BadgeSummary from "../../components/BadgeSummary";
 import { Image } from "expo-image";
 import { useAuth } from "../../context/AuthContext"; // ✅ Import useAuth
+import RecentNotifications from "../../components/RecentNotifications";
 
 export default function MemberDashboard() {
   const router = useRouter();
@@ -49,12 +50,6 @@ export default function MemberDashboard() {
     await fetchAll();
   };
 
-  const rewards = {
-    badges: 4,
-    points: 120,
-    streak: 6, // weeks in a row
-  };
-
   if (loading) {
     return (
       <View style={styles.centered}>
@@ -87,35 +82,28 @@ export default function MemberDashboard() {
         </View>
       </View>
 
-      <Card
-        title="Important Notification"
-        description="No sessions this week due to holidays."
-        variant="notification"
-        visible={true}
-      />
+      <Card variant="notification" />
 
       {/* 📢 Notifications */}
-      <Card>
-        <Text style={styles.sectionTitle}>Notifications</Text>
-        <Text style={styles.notification}>
-          🎉 A new event has been added to your group!
-        </Text>
-        <Text style={styles.notification}>
-          ✅ You're enrolled in {member?.groups?.length || 0} groups.
-        </Text>
-      </Card>
+      <RecentNotifications />
 
       {/* 📅 Upcoming Events */}
       <Card>
         <Text style={styles.sectionTitle}>Upcoming Events</Text>
+
         {events.length === 0 ? (
           <Text style={{ color: "#888" }}>No events found.</Text>
         ) : (
           events.slice(0, 2).map((event, index) => (
-            <Text key={index} style={styles.notification}>
-              📅 {event.name} —{" "}
-              {event.date?.toDate().toLocaleDateString() || "TBA"}
-            </Text>
+            <View key={index} style={styles.eventRow}>
+              <Text style={styles.eventName}>{event.name}</Text>
+              <Text style={styles.eventDate}>
+                {event.date?.toDate().toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                }) || "TBA"}
+              </Text>
+            </View>
           ))
         )}
       </Card>
@@ -123,8 +111,12 @@ export default function MemberDashboard() {
       {/* 📈 Progress */}
       <Card>
         <Text style={styles.sectionTitle}>Your Progress</Text>
-        <Text style={styles.progressItem}>Lessons Attended: 7/10</Text>
-        <Text style={styles.progressItem}>Badges Earned: 2</Text>
+        <Text style={styles.progressItem}>
+          Lessons Attended: {member?.sessionsAttended || 0}
+        </Text>
+        <Text style={styles.progressItem}>
+          Badges Earned: {member?.badges || 0}
+        </Text>
       </Card>
 
       <BadgeSummary />
@@ -216,5 +208,25 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#444",
     textAlign: "center",
+  },
+  eventRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 6,
+  },
+
+  eventName: {
+    fontSize: 14,
+    color: "#333",
+    flexShrink: 1,
+    fontWeight: "500",
+  },
+
+  eventDate: {
+    fontSize: 13,
+    color: "#999",
+    marginLeft: 8,
+    textAlign: "right",
   },
 });

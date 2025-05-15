@@ -4,6 +4,7 @@ import { generateTestResources } from "../scripts/generateTestResources";
 import { createTestTimetableData } from "../scripts/CreateTestTimetableData";
 import { createAllGroups } from "../scripts/createAllGroups";
 import { createTestEvents } from "../scripts/createTestEvents";
+import { seedItems } from "../scripts/createTestItems";
 
 export default function TestGenerateResourcesPage() {
   useEffect(() => {

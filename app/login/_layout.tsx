@@ -56,6 +56,7 @@ export default function LoginLayout() {
         name="index"
         options={{
           title: "Login",
+          headerShown: false,
         }}
       />
     </Stack>

@@ -4,16 +4,17 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Pressable,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
 import Screen from "../../../components/Screen";
-import Title from "../../../components/Title";
 import MyButton from "../../../components/Button";
 import SlideUpModal from "../../../components/SlideUpModal";
-import Card from "../../../components/Card"; // ✅ import your custom Card
+import Card from "../../../components/Card";
+import AddToCalendarButton from "../../../components/AddToCalendarButton";
+import AttendingButton from "../../../components/AttendingButton";
 
 type EventItem = {
   id: string;
@@ -70,31 +71,38 @@ export default function EventsScreen() {
           style={{ marginTop: 40 }}
         />
       ) : events.length === 0 ? (
-        <Text style={{ marginTop: 24, color: "#888", textAlign: "center" }}>
-          No events found.
-        </Text>
+        <Text style={styles.noEvents}>No events found.</Text>
       ) : (
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingTop: 10, paddingBottom: 40 }}
         >
           {events.map((event) => (
-            <Card key={event.id} style={{ marginBottom: 16 }}>
-              <Text style={styles.name}>{event.name}</Text>
-              <Text style={styles.date}>🕒 {formatDate(event.date)}</Text>
-              <Text style={styles.location}>📍 {event.location}</Text>
+            <Card key={event.id} style={styles.card}>
+              <View style={styles.cardHeader}>
+                <Text style={styles.name}>{event.name}</Text>
+                <AddToCalendarButton
+                  title={event.name}
+                  startDate={event.date}
+                  endDate={new Date(event.date.getTime() + 60 * 60 * 1000)}
+                  location={event.location}
+                  notes={event.notes}
+                />
+              </View>
+
+              <Text style={styles.detail}>🕒 {formatDate(event.date)}</Text>
+              <Text style={styles.detail}>📍 {event.location}</Text>
 
               <MyButton
                 label="View More"
                 onPress={() => setSelectedEvent(event)}
-                style={{ marginTop: 12 }}
+                style={styles.viewButton}
               />
             </Card>
           ))}
         </ScrollView>
       )}
 
-      {/* Modal Detail View */}
       <SlideUpModal
         visible={!!selectedEvent}
         onClose={() => setSelectedEvent(null)}
@@ -110,6 +118,20 @@ export default function EventsScreen() {
               <Text style={styles.modalNotes}>📝 {selectedEvent.notes}</Text>
             )}
 
+            <AddToCalendarButton
+              title={selectedEvent.name}
+              startDate={selectedEvent.date}
+              endDate={new Date(selectedEvent.date.getTime() + 60 * 60 * 1000)}
+              location={selectedEvent.location}
+              notes={selectedEvent.notes}
+            />
+
+            {/* ✅ I'm Attending button */}
+            <AttendingButton
+              eventId={selectedEvent.id}
+              eventName={selectedEvent.name}
+            />
+
             <Pressable
               style={styles.closeButton}
               onPress={() => setSelectedEvent(null)}
@@ -124,18 +146,33 @@ export default function EventsScreen() {
 }
 
 const styles = StyleSheet.create({
+  card: {
+    marginBottom: 16,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 6,
+  },
   name: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "700",
+    color: "#222",
+    flexShrink: 1,
   },
-  date: {
-    marginTop: 6,
+  detail: {
     fontSize: 14,
     color: "#444",
+    marginBottom: 2,
   },
-  location: {
-    fontSize: 14,
-    color: "#444",
+  noEvents: {
+    marginTop: 24,
+    color: "#888",
+    textAlign: "center",
+  },
+  viewButton: {
+    marginTop: 12,
   },
   modalTitle: {
     fontSize: 20,

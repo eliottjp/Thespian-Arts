@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ScrollView,
+  Image,
 } from "react-native";
 import { useAuth } from "../../../context/AuthContext";
 import { db } from "../../../lib/firebase";
@@ -19,28 +20,30 @@ import {
   query,
   orderBy,
   onSnapshot,
+  getDocs,
 } from "firebase/firestore";
-import Title from "../../../components/Title";
 import Screen from "../../../components/Screen";
 import BadgeSummary from "../../../components/BadgeSummary";
 import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";
-
-const storeItems = [
-  { id: "1", name: "Water Bottle", cost: 50, emoji: "🥤" },
-  { id: "2", name: "T-Shirt", cost: 100, emoji: "👕" },
-  { id: "3", name: "Sticker Pack", cost: 20, emoji: "📦" },
-];
 
 export default function RewardsPage() {
   const { userData } = useAuth();
   const router = useRouter();
 
   const [points, setPoints] = useState<number>(0);
+  const [storeItems, setStoreItems] = useState<any[]>([]);
   const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const memberRef = userData?.uid ? doc(db, "members", userData.uid) : null;
+
+  const fetchStoreItems = async () => {
+    const ref = collection(db, "rewards", "config", "items");
+    const snap = await getDocs(ref);
+    const items = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    setStoreItems(items);
+  };
 
   const redeem = async (item: any) => {
     if (points < item.cost) {
@@ -88,8 +91,8 @@ export default function RewardsPage() {
     if (!userData?.uid) return;
 
     setLoading(true);
+    fetchStoreItems();
 
-    // Listen to live updates for points
     const unsubPoints = onSnapshot(doc(db, "members", userData.uid), (snap) => {
       const data = snap.data();
       setPoints(data?.points || 0);
@@ -141,7 +144,14 @@ export default function RewardsPage() {
                 disabled={points < item.cost}
                 onPress={() => redeem(item)}
               >
-                <Text style={styles.itemEmoji}>{item.emoji}</Text>
+                {item.imageURL ? (
+                  <Image
+                    source={{ uri: item.imageURL }}
+                    style={styles.itemImage}
+                  />
+                ) : (
+                  <Text style={styles.itemEmoji}>{item.emoji}</Text>
+                )}
                 <View style={{ flex: 1 }}>
                   <Text style={styles.itemName}>{item.name}</Text>
                   <Text style={styles.itemCost}>{item.cost} points</Text>
@@ -240,6 +250,12 @@ const styles = StyleSheet.create({
   },
   itemEmoji: {
     fontSize: 34,
+  },
+  itemImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    resizeMode: "cover",
   },
   itemName: {
     fontSize: 16,

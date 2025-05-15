@@ -42,7 +42,8 @@
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
           "recordAudioAndroid": true
         }
-      ]
+      ],
+      "react-native-add-calendar-event"
     ],
     "experiments": {
       "typedRoutes": true

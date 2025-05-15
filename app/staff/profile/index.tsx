@@ -91,28 +91,6 @@ export default function ProfileScreen() {
         <Text style={styles.value}>{user?.uid || "Unknown"}</Text>
       </Card>
 
-      {/* 👶 Add Child */}
-      <View style={{ marginBottom: 24 }}>
-        <Text style={styles.sectionHeading}>Tools</Text>
-
-        {userData?.admin && (
-          <MenuButton
-            icon={<Ionicons name="key-outline" size={20} color="#d60124" />}
-            label="Access Admin Panel"
-            onPress={() => {
-              router.push("/staff/admin");
-            }}
-          />
-        )}
-        <MenuButton
-          icon={<Ionicons name="add-outline" size={20} color="#d60124" />}
-          label="Join New Group"
-          onPress={() => {
-            router.push("/staff/profile/join-group");
-          }}
-        />
-      </View>
-
       {/* 🛠 Support & Info */}
       <View style={{ marginBottom: 24 }}>
         <Text style={styles.sectionHeading}>Support & Info</Text>

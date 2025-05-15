@@ -71,12 +71,12 @@ export default function ReportDetailsPage() {
 
   const formatLinkedField = (label: string, value: string, uid: string) => (
     <Pressable
-      onPress={() =>
-        router.push({
-          pathname: "/staff/profile/[staffId]",
-          params: { staffId: uid },
-        })
-      }
+      // onPress={() =>
+      //   router.push({
+      //     pathname: "/staff/profile/[staffId]",
+      //     params: { staffId: uid },
+      //   })
+      // }
       style={styles.row}
     >
       <Text style={styles.label}>{label}</Text>

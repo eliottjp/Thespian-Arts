@@ -13,6 +13,7 @@ import { db, auth } from "../../lib/firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import Card from "../../components/Card";
 import { Image } from "expo-image";
+import RecentNotifications from "@/components/RecentNotifications";
 
 export default function ParentDashboard() {
   const router = useRouter();
@@ -121,15 +122,7 @@ export default function ParentDashboard() {
       </Card>
 
       {/* 📢 Notifications */}
-      <Card>
-        <Text style={styles.sectionTitle}>Notifications</Text>
-        <Text style={styles.notification}>
-          🎉 New event added for next week!
-        </Text>
-        <Text style={styles.notification}>
-          🧾 Your next payment is due in 5 days.
-        </Text>
-      </Card>
+      <RecentNotifications />
 
       {/* 📈 Progress */}
       <Card>

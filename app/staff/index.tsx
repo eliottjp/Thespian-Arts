@@ -14,6 +14,7 @@ import Card from "../../components/Card";
 import BadgeSummary from "../../components/BadgeSummary";
 import { Image } from "expo-image";
 import { useAuth } from "../../context/AuthContext"; // ✅ Import useAuth
+import RecentNotifications from "../../components/RecentNotifications";
 
 export default function StaffDashboard() {
   const router = useRouter();
@@ -87,25 +88,10 @@ export default function StaffDashboard() {
         </View>
       </View>
 
-      <Card
-        title="Important Notification"
-        description="No sessions this week due to holidays."
-        variant="notification"
-        visible={true}
-      />
+      <Card variant="notification" />
 
       {/* 📢 Notifications */}
-      <Card>
-        <Text style={styles.sectionTitle}>Notifications</Text>
-        <Text style={styles.notification}>
-          🎉 A new event has been scheduled for your group: "
-          {member?.groups?.[0]?.name || "Your Group"}!"
-        </Text>
-
-        <Text style={styles.notification}>
-          📅 Don't forget to update your group’s upcoming schedule.
-        </Text>
-      </Card>
+      <RecentNotifications />
 
       {/* 📅 Upcoming Events */}
       <Card>

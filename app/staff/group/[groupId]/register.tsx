@@ -14,11 +14,22 @@ import { db } from "../../../../lib/firebase";
 import {
   collection,
   getDocs,
+  getDoc,
+  updateDoc,
   doc,
   setDoc,
   serverTimestamp,
 } from "firebase/firestore";
 import Screen from "../../../../components/Screen";
+import {
+  getISOWeek,
+  getYear,
+  subWeeks,
+  format,
+  isSameWeek,
+  parseISO,
+} from "date-fns";
+
 import { useAuth } from "../../../../context/AuthContext";
 
 export default function GroupRegisterPage() {
@@ -59,16 +70,50 @@ export default function GroupRegisterPage() {
   };
 
   const handleSubmit = async () => {
-    const dateKey = new Date().toISOString().split("T")[0]; // e.g. "2024-04-17"
+    const now = new Date();
+    const currentWeek = `${getYear(now)}-W${String(getISOWeek(now)).padStart(
+      2,
+      "0"
+    )}`;
+    const lastWeek = `${getYear(subWeeks(now, 1))}-W${String(
+      getISOWeek(subWeeks(now, 1))
+    ).padStart(2, "0")}`;
+
+    const dateKey = now.toISOString().split("T")[0]; // e.g. "2024-04-17"
 
     try {
+      // Save the register for the group
       await setDoc(doc(db, "groups", groupId, "registers", dateKey), {
         takenBy: userData?.uid,
         takenAt: serverTimestamp(),
         present: presentIds,
       });
 
-      Alert.alert("✅ Register Saved", "Attendance has been submitted.");
+      // Update streak for each present member
+      await Promise.all(
+        presentIds.map(async (memberId) => {
+          const memberRef = doc(db, "members", memberId);
+          const memberSnap = await getDoc(memberRef);
+          const memberData = memberSnap.data();
+
+          const previousWeek = memberData?.lastAttendanceWeek;
+          const currentStreak = memberData?.streak || 0;
+          const currentSessions = memberData?.sessionsAttended || 0;
+
+          const newStreak = previousWeek === lastWeek ? currentStreak + 1 : 1;
+
+          await updateDoc(memberRef, {
+            lastAttendanceWeek: currentWeek,
+            streak: newStreak,
+            sessionsAttended: currentSessions + 1,
+          });
+        })
+      );
+
+      Alert.alert(
+        "✅ Register Saved",
+        "Attendance and streaks have been updated."
+      );
       router.back();
     } catch (err) {
       console.error("Error saving register:", err);

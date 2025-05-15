@@ -12,7 +12,6 @@ export default function StaffLayout() {
         tabBarLabelStyle: { fontSize: 12 },
         headerRight: () => (
           <StaffHeaderIcons
-            showProfile
             showNotification
             onCustomPress={() => console.log("Notifications tapped")}
           />
@@ -148,7 +147,7 @@ export default function StaffLayout() {
       />
       <Tabs.Screen
         name="admin/users/index"
-        options={{ href: null, title: "Users" }}
+        options={{ href: null, title: "Manage Users" }}
       />
       <Tabs.Screen
         name="admin/users/create-member"
@@ -165,6 +164,34 @@ export default function StaffLayout() {
       <Tabs.Screen
         name="admin/group/[groupId]/addMembers"
         options={{ href: null, title: "Manage Groups" }}
+      />
+      <Tabs.Screen
+        name="admin/events/index"
+        options={{ href: null, title: "Manage Events" }}
+      />
+      <Tabs.Screen
+        name="admin/events/[eventId]/attendees"
+        options={{ href: null, title: "Event Attendees" }}
+      />
+      <Tabs.Screen
+        name="admin/notifications/index"
+        options={{ href: null, title: "Schedule Notification" }}
+      />
+      <Tabs.Screen
+        name="admin/rewards/manageRewards"
+        options={{ href: null, title: "Manage Rewards" }}
+      />
+      <Tabs.Screen
+        name="admin/events/[eventId]/index"
+        options={{ href: null, title: "Event Details" }}
+      />
+      <Tabs.Screen
+        name="group/[groupId]/members"
+        options={{ href: null, title: "Group Members" }}
+      />
+      <Tabs.Screen
+        name="admin/group/create-group"
+        options={{ href: null, title: "Create Group" }}
       />
     </Tabs>
   );

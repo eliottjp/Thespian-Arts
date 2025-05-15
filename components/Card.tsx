@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,9 @@ import {
   Pressable,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../lib/firebase";
+import { useAuth } from "../context/AuthContext";
 
 type CardProps = {
   children?: ReactNode;
@@ -28,13 +31,36 @@ export default function Card({
   visible = true,
   onPress,
 }: CardProps) {
-  if (!visible) return null;
+  const { role } = useAuth(); // 🎯 using computed role
+  const [activeAnnouncement, setActiveAnnouncement] = useState<any>(null);
 
   const isNotification = variant === "notification";
 
-  // Animations only for notification variant
   const shimmerAnim = useRef(new Animated.Value(-1)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  const showDynamic = isNotification && !title && !description;
+
+  useEffect(() => {
+    if (!showDynamic || !role) return;
+
+    const unsub = onSnapshot(collection(db, "announcements"), (snap) => {
+      const now = new Date();
+
+      const matching = snap.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() }))
+        .filter((a) => {
+          const isInAudience = a.audience?.includes(role);
+          const isActive =
+            a.startTime.toDate() <= now && now <= a.endTime.toDate();
+          return isInAudience && isActive;
+        });
+
+      setActiveAnnouncement(matching[0] || null);
+    });
+
+    return () => unsub();
+  }, [showDynamic, role]);
 
   useEffect(() => {
     if (isNotification) {
@@ -70,7 +96,13 @@ export default function Card({
     });
   };
 
-  // ────── Notification Card ──────
+  const displayTitle = title || activeAnnouncement?.title;
+  const displayDescription = description || activeAnnouncement?.description;
+
+  if (!visible || (isNotification && showDynamic && !activeAnnouncement)) {
+    return null;
+  }
+
   if (isNotification) {
     return (
       <Pressable onPress={handlePress}>
@@ -82,7 +114,6 @@ export default function Card({
             style,
           ]}
         >
-          {/* Shimmer */}
           <Animated.View
             pointerEvents="none"
             style={[styles.shimmerOverlay, { transform: [{ translateX }] }]}
@@ -95,12 +126,14 @@ export default function Card({
             />
           </Animated.View>
 
-          {title && (
-            <Text style={[styles.title, { color: "#fff" }]}>{title}</Text>
+          {displayTitle && (
+            <Text style={[styles.title, { color: "#fff" }]}>
+              {displayTitle}
+            </Text>
           )}
-          {description && (
+          {displayDescription && (
             <Text style={[styles.description, { color: "#ffe6e6" }]}>
-              {description}
+              {displayDescription}
             </Text>
           )}
           {children}
@@ -109,11 +142,12 @@ export default function Card({
     );
   }
 
-  // ────── Default Card ──────
   return (
     <View style={[styles.card, style]}>
-      {title && <Text style={styles.title}>{title}</Text>}
-      {description && <Text style={styles.description}>{description}</Text>}
+      {displayTitle && <Text style={styles.title}>{displayTitle}</Text>}
+      {displayDescription && (
+        <Text style={styles.description}>{displayDescription}</Text>
+      )}
       {children}
     </View>
   );

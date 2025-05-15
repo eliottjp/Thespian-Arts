@@ -12,7 +12,7 @@ export default function MyButton({
       onPress={onPress}
       style={{
         backgroundColor: "#d60124",
-        padding: 14,
+        padding: 12,
         borderRadius: 8,
         alignItems: "center",
         marginTop: 12,

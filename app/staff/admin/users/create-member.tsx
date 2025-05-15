@@ -163,8 +163,6 @@ export default function CreateMember() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Create Member</Text>
-
       <TextInput
         style={styles.input}
         placeholder="Full Name"

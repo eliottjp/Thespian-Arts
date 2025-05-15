@@ -9,10 +9,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { doc, getDoc } from "firebase/firestore";
 import { router } from "expo-router";
 
+type Role = "staff" | "parent" | "member";
+
 type UserData = {
   uid: string;
   name: string;
-  role: "staff" | "parent" | "member";
+  role: Role;
   branches?: string[];
   [key: string]: any;
 };
@@ -26,6 +28,7 @@ type AuthContextType = {
   refreshUserData: () => Promise<void>;
   isMember: boolean;
   isFirebaseUser: boolean;
+  role: Role | null;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -37,6 +40,7 @@ const AuthContext = createContext<AuthContextType>({
   refreshUserData: async () => {},
   isMember: false,
   isFirebaseUser: false,
+  role: null,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -96,7 +100,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(null);
     setUserData(null);
 
-    // Delay to ensure layout re-renders before router redirects
     setTimeout(() => {
       router.replace("/login");
     }, 100);
@@ -127,6 +130,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const isMember = user === false;
   const isFirebaseUser = !!user && typeof user !== "boolean";
 
+  // ✨ Computed role (for use across the app)
+  const role: Role | null =
+    user === false ? "member" : (userData?.role as Role | undefined) ?? null;
+
   return (
     <AuthContext.Provider
       value={{
@@ -138,6 +145,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         refreshUserData,
         isMember,
         isFirebaseUser,
+        role,
       }}
     >
       {children}

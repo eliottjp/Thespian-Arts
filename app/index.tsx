@@ -2,30 +2,42 @@ import { useEffect } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "../context/AuthContext";
+import * as Notifications from "expo-notifications";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { db } from "../lib/firebase";
 
 export default function Index() {
   const { user, userData, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      // If not loading and still no userData, redirect to login
-      if (!loading) {
-        if (!user || !userData) {
-          router.replace("/login");
-          return;
-        }
-
-        // If logged in, redirect to the correct dashboard
-        const role = userData.role?.toLowerCase();
-        if (role === "parent") router.replace("/parent");
-        else if (role === "member") router.replace("/member");
-        else if (role === "staff") router.replace("/staff");
-        else router.replace("/unknown-role");
+    const setup = async () => {
+      // Request notification permissions
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status !== "granted") {
+        console.warn("Notification permissions not granted");
       }
-    }, 1500); // ⏳ fallback delay
 
-    return () => clearTimeout(timeout);
+      const timeout = setTimeout(() => {
+        if (!loading) {
+          if (!user || !userData) {
+            router.replace("/login");
+            return;
+          }
+
+          const role = userData.role?.toLowerCase();
+          if (role === "parent") router.replace("/parent");
+          else if (role === "member") router.replace("/member");
+          else if (role === "staff") router.replace("/staff");
+          else router.replace("/unknown-role");
+        }
+      }, 1500);
+
+      return () => clearTimeout(timeout);
+    };
+
+    setup();
   }, [user, userData, loading]);
 
   return (
