@@ -45,10 +45,6 @@ Below is the current app structure and progress across all roles.
 | View Linked Parents| ✅     | `member/profile/connections`         |                                              |
 | View Rewards       | ✅     | `member/rewards`                     | Spend points                                 |
 | Redeem Reward      | ✅     | `member/rewards/redeem`              | Shows QR or 4-digit code                    |
-| Notifications      | ❌     | `member/notifications`               |                                              |
-| Shop               | ❌     | `member/store`                       | Request items                                |
-| Messages List      | ❌     | `member/messages`                    |                                              |
-| Messages Chat      | ❌     | `member/messages/{chat}`             | Messaging with tutors                       |
 
 ---
 
@@ -74,11 +70,7 @@ Below is the current app structure and progress across all roles.
 | Payment History     | ❌     | `parent/payments/history`                |                                              |
 | Payment Checkout    | ❌     | `parent/payments/checkout?{member}?{groups}` | Checkout for group enrollment           |
 | Submit Absence      | ❌     | `parent/members/{member}/absence`         | Optional refund/skip if within time          |
-| Messages List       | ❌     | `parent/messages`                         |                                              |
-| Messages Chat       | ❌     | `parent/messages/{chat}`                 |                                              |
-| Notifications       | ❌     | `parent/notifications`                   |                                              |
 | Shop                | ✅     | `parent/store`                           | Buy merch, DVDs, etc.                         |
-| Review Shop Items   | ❌     | `parent/store/review`                    | Review child’s requested items               |
 
 ---
 
@@ -86,13 +78,13 @@ Below is the current app structure and progress across all roles.
 | Page                | Status | Path                                 | Notes                                       |
 |---------------------|--------|--------------------------------------|---------------------------------------------|
 | Dashboard           | ✅     | `staff/`                              | Profile + event updates                     |
-| Events List         | ❌     | `staff/events`                        |                                              |
+| Events List         | ✅     | `staff/events`                        |                                              |
 | Groups List         | ✅     | `staff/group`                         |                                              |
 | Group Details       | ✅     | `staff/group/{group}`                | Includes quick links                        |
 | Group Resources     | ✅     | `staff/group/resources/view/{resource}`| View media                                  |
 | Add Resources       | ✅     | `staff/group/resources/add`          |                                              |
 | Take Register       | ✅     | `staff/group/{group}/register`       |                                              |
-| Group Members       | ❌     | `staff/group/{group}/members`        |                                              |
+| Group Members       | ✅     | `staff/group/{group}/members`        |                                              |
 | Profile             | ✅     | `staff/profile`                       |                                              |
 | Update Profile      | ✅     | `staff/profile/update`               | Headshot required                            |
 | Reports             | ✅     | `staff/reports`                      | Create incident or safeguarding reports     |
@@ -100,11 +92,11 @@ Below is the current app structure and progress across all roles.
 | Reward Collection   | ✅     | `staff/reward/collect`               | QR code scanner                              |
 | Search              | ✅     | `staff/search`                       | Search all members                          |
 | Member Details      | ✅     | `staff/search/{member}`              |                                              |
-| Tools               | ❌     | `staff/tools`                        | Shortcuts to common features                |
-| Notifications       | ❌     | `staff/notifications`               | View notifications                           |
-| Send Notification   | ❌     | `staff/notifications/send`          | Push to groups                               |
-| Messages List       | ❌     | `staff/messages`                    |                                              |
-| Messages Chat       | ❌     | `staff/messages/{chat}`             | With parents/members                         |
+| Tools               | ✅     | `staff/tools`                        | Shortcuts to common features                |
+| Cover Planner       | ✅     | `staff/cover-planner`                | Lesson Planner for cover                    |
+| Request Access      | ✅     | `staff/request-`                        | Shortcuts to common features                |
+
+
 
 ---
 
@@ -116,7 +108,7 @@ Below is the current app structure and progress across all roles.
 | Add Group Members    | ✅     | `staff/admin/`          |                                 |
 | Add Members          | ✅     | `staff/admin/`          |                                 |
 | Edit Members         | ✅     | `staff/admin/`          |                                 |
-| Manage Users         | ❌     | `staff/admin/`          |                                 |
+| Manage Users         | ✅     | `staff/admin/`          |                                 |
 | Payments Overview    | ❌     | `staff/admin/`          |                                 |
 | Register Overview    | ❌     | `staff/admin/`          |                                 |
 | Reports List         | ✅     | `staff/admin/reports`   |                                 |
@@ -125,12 +117,11 @@ Below is the current app structure and progress across all roles.
 
 ## 🛠 Tech Stack
 
-- **React Native** (Expo)
-- **Expo Router** for navigation
+- **React** (Vite)
+- **React Navigation** for navigation
 - **Firebase Firestore** for backend
 - **Firebase Storage** for media
-- **Expo Push Notifications** (planned)
-- **Vercel** for web deployment
+- **Verce/ Firebase Hostingl** for web deployment
 - **GitHub** for version control & collaboration
 
 ---
